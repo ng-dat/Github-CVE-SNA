@@ -1,6 +1,7 @@
 import requests
 # import graphene
 
+
 def run_query(query, headers):
     request = requests.post('https://api.github.com/graphql',
                             json={'query': query}, headers=headers)
