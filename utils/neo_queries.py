@@ -17,3 +17,29 @@ def query_most_cve_starred_users(neo4j_graph, limit_users):
     user_nodes = neo4j_graph.run(cypher_query, parameters={'limit_users_param': limit_users}).data()
     users = [x['n']['username'] for x in user_nodes]
     return users
+
+
+def query_people_and_starred_links(neo4j_graph):
+    """
+    """
+    cypher_query = '''
+        MATCH (n:Person)-[s:STARRED]->()
+        WITH n, count(s) as counted
+        ORDER BY counted DESC
+        RETURN n.username as username, counted
+    '''
+    user_nodes = neo4j_graph.run(cypher_query).data()
+    return user_nodes
+
+
+def query_repos_and_starred_links(neo4j_graph):
+    """
+    """
+    cypher_query = '''
+        MATCH ()-[s:STARRED]->(r:Repo)
+        WITH r, count(s) as counted
+        ORDER BY counted DESC
+        RETURN r.name as reponame, counted
+    '''
+    nodes = neo4j_graph.run(cypher_query).data()
+    return nodes
